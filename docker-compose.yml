@@ -1,0 +1,23 @@
+version: '3'
+services:
+  search-api:
+    build: .
+    image: python:3.6
+    command: uvicorn main:app --host 0.0.0.0 --reload
+    volumes:
+        - ./:/app/
+    ports:
+        - 8000:8000
+    depends_on:
+      - redis-db
+    networks:
+      - backend  
+
+  redis-db:
+    image: redis
+    container_name: redis-db
+    networks:
+      - backend
+networks:
+  backend:
+    driver: bridge
