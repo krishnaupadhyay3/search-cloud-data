@@ -10,6 +10,7 @@ services:
         - 8000:8000
     depends_on:
       - redis-db
+      - esprod1
     networks:
       - backend  
 
@@ -18,6 +19,21 @@ services:
     container_name: redis-db
     networks:
       - backend
+
+  esprod1:
+    image: elasticsearch:7.8.0
+    container_name: esprod1
+    volumes:
+        - ./data/:/usr/share/elasticsearch/data
+    ports:
+        - 9200:9200
+
+    environment:
+        - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+        - "discovery.type=single-node"
+    networks:
+        - backend
+
 networks:
   backend:
     driver: bridge
