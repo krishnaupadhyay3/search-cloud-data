@@ -1,2 +1,2 @@
 from redis import Redis
-redisClient = Redis(host='redis')
+redisClient = Redis(host='redis-db')

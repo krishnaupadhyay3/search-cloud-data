@@ -6,9 +6,9 @@ import io
 import os
 import random
 import string
-from database import redisClient
+from .database import redisClient
 
-with open("./client_secret.json") as fp:
+with open("./workers/client_secret.json") as fp:
     credz = json.load(fp)
 credentials = service_account.Credentials.from_service_account_info(credz)
 drive_service = build('drive', 'v3', credentials=credentials)
@@ -55,7 +55,7 @@ def download_google_file(file_url):
     try:
         file_id = get_file_id(file_url)
         file_name = get_file_name_from_drive(drive_service, file_id)
-        download_folder = os.getenv("DOWNLOAD_FOLDER", "../data/")
+        download_folder = os.getenv("DOWNLOAD_FOLDER", "./data/")
         file_name = get_available_file_name(file_name, download_folder)
         download_file(drive_service, file_id, file_name)
         redisClient.hmset(file_id, {"status": "success"})
