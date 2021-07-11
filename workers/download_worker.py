@@ -7,7 +7,11 @@ import os
 import random
 import string
 from .database import redisClient
+from rq import Queue
+from .extractor_worker import extract_data
 
+
+fileQueue = Queue('tikaExtractor', connection=redisClient)
 with open("./workers/client_secret.json") as fp:
     credz = json.load(fp)
 credentials = service_account.Credentials.from_service_account_info(credz)
@@ -59,6 +63,8 @@ def download_google_file(file_url):
         file_name = get_available_file_name(file_name, download_folder)
         download_file(drive_service, file_id, file_name)
         redisClient.hmset(file_id, {"status": "success"})
+        fileQueue.enqueue_call(func=extract_data,
+                               args=(file_name, file_id,), job_id=file_id)
 
     except Exception as ex:
         redisClient.hmset(file_id, {"status": "failed", "error": str(ex)})
