@@ -1,6 +1,6 @@
 FROM python:3.6-alpine
 
-RUN apk update && apk add g++ python3-dev libffi-dev openssl-dev git
+RUN apk update && apk add g++ python3-dev libffi-dev openssl-dev git openjdk8
 WORKDIR /app
 
 COPY ./requirements.txt /app/requirements.txt
