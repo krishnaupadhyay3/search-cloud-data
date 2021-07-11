@@ -4,8 +4,12 @@ from models import InputString
 from rq import Queue
 from workers.database import  redisClient, es_client
 from  workers.download_worker import  download_google_file, get_file_id
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 
 app = FastAPI()
+app.mount("/static", StaticFiles(directory="static"), name="static")
+templates = Jinja2Templates(directory="templates")
 
 urlQueue = Queue('googleDown', connection=redisClient)
 
@@ -80,8 +84,8 @@ def delete_entry(file_id: Optional[str] = None):
 
 
 @app.get("/v1/search")
-def search_index(request: Request, skip: int = 0, limit: int = 10,
-                 q: str = None):
+def search_index_api(request: Request, skip: int = 0, limit: int = 10,
+                     q: str = None):
     query = q
     response_dict = {}
     if not query:
@@ -95,3 +99,31 @@ def search_index(request: Request, skip: int = 0, limit: int = 10,
         response_dict["hits"] = [get_fields(i) for i in
                                  results.get("hits")["hits"]]
     return response_dict
+
+
+@app.get("/")
+async def index(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
+
+
+@app.get("/search")
+def search_index(request: Request, skip: int = 0, limit: int = 10,
+                 q: str = None):
+    query = q
+    if not query:
+        return templates.TemplateResponse("search.html", {"request": request,
+                                          "result": None})
+    results = es_client.search(
+        index="articles", body={"query": {"multi_match": {"query": query}}}
+    )
+    result_for_template = {}
+
+    if results:
+        result_for_template["took"] = results.get("took", 0.0)
+        result_for_template["hits_count"] = results.get(
+                                            "hits")["total"]["value"]
+        result_for_template["hits"] = results.get("hits")["hits"]
+
+    return templates.TemplateResponse("search.html",
+                                      {"request": request,
+                                       "results": result_for_template})

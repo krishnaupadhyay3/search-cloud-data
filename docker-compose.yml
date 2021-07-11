@@ -1,4 +1,4 @@
-version: '3'
+version: '2.1'
 services:
   search-api:
     build: .
@@ -9,14 +9,21 @@ services:
     ports:
         - 8000:8000
     depends_on:
-      - redis-db
-      - esprod1
+      esprod1:
+        condition: service_healthy
+      redis-db:
+        condition : service_healthy
     networks:
       - backend  
 
   redis-db:
     image: redis
     container_name: redis-db
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 1s
+      timeout: 3s
+      retries: 30
     networks:
       - backend
 
@@ -27,7 +34,11 @@ services:
         - ./data/:/usr/share/elasticsearch/data
     ports:
         - 9200:9200
-
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail localhost:9200/_cluster/health || exit 1"]
+      interval: 10s
+      timeout: 30s
+      retries: 5
     environment:
         - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
         - "discovery.type=single-node"
