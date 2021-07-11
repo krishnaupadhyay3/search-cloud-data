@@ -64,7 +64,7 @@ def download_google_file(file_url):
         download_file(drive_service, file_id, file_name)
         redisClient.hmset(file_id, {"status": "success"})
         fileQueue.enqueue_call(func=extract_data,
-                               args=(file_name, file_id,), job_id=file_id)
+                               args=(file_name, file_id, file_url), job_id=file_id)
 
     except Exception as ex:
         redisClient.hmset(file_id, {"status": "failed", "error": str(ex)})

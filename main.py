@@ -57,6 +57,7 @@ def index_pdf(payload: InputString, response: Response):
     try:
         file_id = get_file_id(url_value)
         if redisClient.hgetall(file_id):
+            response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
             return {"error": "file already indexed"}
         redisClient.hmset(file_id, {"status": "inprogress"})
         urlQueue.enqueue_call(func=download_google_file,

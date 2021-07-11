@@ -48,3 +48,6 @@ services:
 networks:
   backend:
     driver: bridge
+
+    # rq worker googleDown -u redis://redis & &&
+    # rq worker tikaExtracot -u redis://redis &
