@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Stark Search </title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}">
+    <script  src="{{ url_for('static', path='/main.js') }}" type="text/javascript"></script>
+  </head>
+  <body>
+    <div class="page">
+
+  <img class="logo" src="{{ url_for('static', path='/logo.png')}}">
+  <br><input id="searchme" class="search" title="Search" type="text" required><br>
+  <div class="Bcontainer">
+    <div class="button left" onclick="setGetParameter('q')">Stark Search</div>
+    <div class="button right " onclick="IndexPage()">Index Page</div>
+  </div>
+
+  <div class="error-msg">
+    <div class="alert alert-warning alert-dismissible fade show"  id ="error-val"  role="alert">
+      <span class="error"></span>      
+      <button type="button" class="close" onclick="hideError()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+  </body>
+</html>

@@ -1,0 +1,121 @@
+html, body {
+   height: 100%;
+   width: 100%;
+font-family: arial, sans-serif;
+margin: 0;
+}
+
+.logo img{
+  height: 100px;
+width: 9%;
+}
+
+#searchInfo span{
+font-size: small;
+color: #7a7a7a;
+margin-left: 135px;
+line-height: 40px;
+}
+
+#searchInfo{
+height: 40px;
+margin-bottom: 7px;
+margin-top: 2px;
+  margin-left: 4.5%;
+}
+
+.search-box{
+  margin-top: -6.5%;
+}
+.resultWrapper{
+  margin-left: 10%;
+  margin-right: 30%;
+}
+
+.resultWrapper {
+  margin-bottom: 22px;
+}
+.heading{
+font-size: 22px;
+margin-bottom: 4px;
+}
+
+.url{
+color: green;
+font-size: 16px;
+margin-bottom: 3px;
+margin-left: 2px;
+
+}
+.input-val{
+  padding-left: 3%;
+  margin-left: 13%;
+  margin-bottom: 17px;
+  margin-top: 4px;
+background: #fff;
+border: 1px solid #dfe1e5;
+box-shadow: none;
+height: 39px;
+width: 46%;
+border-radius: 24px;
+
+word-wrap: break-word;
+outline: none;
+  font-size: 22px;
+  color:#3ac9c2;
+}
+
+.content{
+  margin-right: 22%;
+  font-size: 16px;
+  margin-left: 3px;
+}
+
+#searchResults {
+  margin-left: 5%;
+}
+#searchResults a{
+text-decoration: none;
+
+}
+
+#searchResults a:hover{
+text-decoration: underline;
+}
+
+#searchResults .url:hover {
+  text-decoration: underline;
+}
+.svg-icon{
+  margin-top: -4%;
+  margin-left: 55.5%;
+fill: currentColor;
+height: 32px;
+line-height: 24px;
+width: 32px;
+color: orange;
+visibility: hidden;
+cursor: pointer;
+}
+.svg-search{
+  display: inline-block;
+fill: currentColor;
+height: 32px;
+width: 32px;
+line-height: 24px;
+position: relative;
+
+color: #4285f4;
+top: 5%;
+}
+.btn-submit{
+  margin-top: -2.6%;
+}
+.search-submit{
+  height: 44px;
+width: 44px;
+background: transparent;
+border: none;
+cursor: pointer;
+margin-left: 58%;
+}
