@@ -1,4 +1,4 @@
-from fastapi import FastAPI, status, Response
+from fastapi import FastAPI, status, Response, Request
 from typing import  Optional
 from models import InputString
 from rq import Queue
@@ -24,6 +24,16 @@ request_body = {
          }
        }
      }
+
+
+def get_fields(data_dict):
+    data = {}
+    data["score"] = data_dict.get("_score")
+    source = data_dict.get("_source")
+    data["file_name"] = source.get("file_name")
+    data["date"] = source.get("date")
+    data["text"] = source.get("text")
+    return data
 
 
 @app.on_event("startup")
@@ -67,3 +77,21 @@ def delete_entry(file_id: Optional[str] = None):
         return {}
     data = redisClient.delete(file_id)
     return data
+
+
+@app.get("/v1/search")
+def search_index(request: Request, skip: int = 0, limit: int = 10,
+                 q: str = None):
+    query = q
+    response_dict = {}
+    if not query:
+        return response_dict
+    results = es_client.search(
+        index="articles", body={"query": {"multi_match": {"query": query}}}
+    )
+    if results:
+        response_dict["took"] = results.get("took", 0.0)
+        response_dict["hits_count"] = results.get("hits")["total"]["value"]
+        response_dict["hits"] = [get_fields(i) for i in
+                                 results.get("hits")["hits"]]
+    return response_dict
