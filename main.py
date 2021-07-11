@@ -2,12 +2,34 @@ from fastapi import FastAPI, status, Response
 from typing import  Optional
 from models import InputString
 from rq import Queue
-from workers.database import  redisClient
+from workers.database import  redisClient, es_client
 from  workers.download_worker import  download_google_file, get_file_id
 
 app = FastAPI()
 
 urlQueue = Queue('googleDown', connection=redisClient)
+
+request_body = {
+       "mappings": {
+         "properties": {
+           "file": {
+             "type":  "keyword"
+           },
+           "text": {
+               "type": "text"
+           },
+           "date": {
+                "type": "date"
+            }
+         }
+       }
+     }
+
+
+@app.on_event("startup")
+def app_startup():
+    if not (es_client.indices.exists(index="articles")):
+        es_client.indices.create(index="articles", body=request_body)
 
 
 @app.post("/v1/driveurl")
